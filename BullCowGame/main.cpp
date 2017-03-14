@@ -15,6 +15,8 @@ void PlayGame();
 std::string GetGuess();
 bool AskToPlayAgain();
 
+FBullCowGame BCGame;
+
 int main(){
 
     bool bPlayAgain = false;
@@ -37,18 +39,20 @@ void PrintIntro(){
 }
 
 void PlayGame(){
-    constexpr int MAX_GUESSES = 5;
+    BCGame.Reset();
+    int MaxTries = BCGame.GetMaxTries();
     
-    for(int i = 0; i < MAX_GUESSES; i++){
-        std::string Guess = GetGuess();
+    for(int i = 0; i < MaxTries; i++){
+        std::string Guess = GetGuess(); // TODO: Make loop checking valid
         std::cout << "Your guess was: " << Guess << std::endl;
         std::cout << std::endl;
     }
+
     return;
 }
 
 std::string GetGuess(){
-    std::cout << "Enter your guess: ";
+    std::cout << "Try " << BCGame.GetCurrentTry() << ". Enter your guess: ";
     std::string Guess = "";
     getline(std::cin, Guess);
     return Guess;

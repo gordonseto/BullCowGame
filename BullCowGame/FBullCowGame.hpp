@@ -11,11 +11,14 @@
 
 class FBullCowGame {
 public:
+    FBullCowGame();
+    
+    int GetMaxTries() const;
+    int GetCurrentTry() const;
+    bool IsGameWon() const;
+    
     void Reset();
-    int GetMaxTries();
-    int GetCurrentTry();
     bool CheckGuessValidity(std::string);
-    bool IsGameWon();
     
 private:
     int MyCurrentTry;
