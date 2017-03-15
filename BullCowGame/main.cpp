@@ -12,6 +12,8 @@
  user int32eraction. For game logic, see FBullCowGame class.
  */
 
+#pragma once
+
 #include <iostream>
 #include <string>
 #include "FBullCowGame.hpp"
@@ -23,6 +25,7 @@ void Print32int32ro();
 void PlayGame();
 FText GetValidGuess();
 bool AskToPlayAgain();
+void PrintGameSummary();
 
 FBullCowGame BCGame;
 
@@ -49,14 +52,16 @@ void PlayGame(){
     BCGame.Reset();
     int32 MaxTries = BCGame.GetMaxTries();
     
-    for(int32 i = 0; i < MaxTries; i++){
-        FText Guess = GetValidGuess(); // TODO: Make loop checking valid
+    while(!BCGame.IsGameWon() && BCGame.GetCurrentTry() <= MaxTries) {
+        FText Guess = GetValidGuess(); 
         
-        FBullCowCount BullCowCount = BCGame.SubmitGuess(Guess);
+        FBullCowCount BullCowCount = BCGame.SubmitValidGuess(Guess);
         
         std::cout << "Bulls = " << BullCowCount.Bulls;
         std::cout << ". Cows = " << BullCowCount.Cows << std::endl;
     }
+    
+    PrintGameSummary();
     
     return;
 }
@@ -66,9 +71,10 @@ FText GetValidGuess(){
     
     EGuessStatus Status = EGuessStatus::Invalid_Status;
     
+    FText Guess = "";
+    
     do {
         std::cout << "Try " << BCGame.GetCurrentTry() << ". Enter your guess: ";
-        FText Guess = "";
         getline(std::cin, Guess);
         
         Status = BCGame.CheckGuessValidity(Guess);
@@ -84,12 +90,12 @@ FText GetValidGuess(){
                 std::cout << "Please enter a word with all lowercases.\n";
                 break;
             default:
-                return Guess;
+                break;
         }
         std::cout << std::endl;
     } while(Status != EGuessStatus::OK);
     
-    return "";
+    return Guess;
 }
 
 bool AskToPlayAgain(){
@@ -98,4 +104,13 @@ bool AskToPlayAgain(){
     std::getline(std::cin, Response);
     std::cout << std::endl;
     return (Response[0] == 'y') || (Response[0] == 'Y');
+}
+
+void PrintGameSummary(){
+    if (BCGame.IsGameWon()){
+        std::cout << "YOU HAVE WON!\n\n";
+    } else {
+        std::cout << "You Lose!\n\n";
+    }
+    return;
 }
